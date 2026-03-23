@@ -1,43 +1,136 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5 mb-5">
-    <h1 class="text-center">Bienvenue chez My Luxe Agence</h1>
-    <p class="text-center mb-4">Découvrez avec nous les meilleurs hôtels et complexes hôteliers de luxe du monde entier.</p>
-    <div class="row">
-        <div class="col-lg-4 ">
-            <div class="card shadow overflow-hidden" style="width: 18rem;">
-                <img src="https://lepetitjournal.com/_next/image?url=https%3A%2F%2Fbackoffice.lepetitjournal.com%2Fsites%2Fdefault%2Ffiles%2F2023-04%2Flas-arenas-balneario-resort%25281%2529.jpg&w=750&q=75" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Hotel Las Arenas</h5>
-                    <p class="card-text">Un hôtel de luxe situé à proximité de la plage, offrant des chambres spacieuses et des services exceptionnels.</p>
-                    <a href="#" class="btn btn-warning">Visitez</a>
-                    <a href="#" class="btn btn-success">Réservez</a>
-                </div>
+<style>
+  .home-hero {
+    min-height: 80vh;
+    background: linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.90) 100%), url('https://images.splitshire.com/full/Luxurious-Seaside-Villa-with-Infinity-Pool-at-Sunset_RCJeb.png') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    position: relative;
+  }
+  .home-hero .hero-content {
+    max-width: 900px;
+    text-align: center;
+    padding: 2rem;
+    backdrop-filter: blur(1px);
+  }
+  .home-hero .hero-subtitle {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #f1d35d;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  .home-hero .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+  }
+  .home-hero .hero-text {
+    font-size: clamp(1rem, 2.2vw, 1.5rem);
+    color: #dedede;
+    margin-bottom: 2rem;
+  }
+  .home-hero .btn-hero {
+    min-width: 210px;
+    border-width: 2px;
+    margin: 0 0.5rem;
+  }
+  .home-hero .btn-primary {
+    background-color: #f1d35d;
+    border-color: #f1d35d;
+    color: #121212;
+  }
+  .home-hero .btn-secondary {
+    background-color: transparent;
+    border-color: #f1d35d;
+    color: #f1d35d;
+  }
+  .home-hero .btn-secondary:hover {
+    background-color: rgba(241,211,93,0.2);
+    color: #ffffff;
+  }
+  .card {
+    background-color: rgba(50, 42, 7, 0.167) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+  }
+</style>
+
+<section class="home-hero">
+  <div class="hero-content">
+    <p class="hero-subtitle">Collection d'hôtels d'exception</p>
+    <h1 class="hero-title">L'art du voyage, sublime</h1>
+    <p class="hero-text">Découvrez notre sélection exclusive d'hôtels de luxe à travers le monde. Chaque séjour est une expérience unique.</p>
+    <a class="btn btn-primary btn-hero" href="#">EXPLORER NOS HÔTELS</a>
+    <a class="btn btn-secondary btn-hero" href="#">EN SAVOIR PLUS</a>
+  </div>
+</section>
+
+<div class="container-fluid py-5 bg-dark text-white" style="background: linear-gradient(140deg, rgba(16,16,16,0.95), rgba(10,10,10,0.95));">
+  <div class="container">
+    <h2 class="text-center text-uppercase" style="color:#f1d35d; letter-spacing:0.2em; font-weight:600;">Nos établissements</h2>
+    <h3 class="text-center mb-4" style="font-family:'Playfair Display', serif; font-weight:700; font-size:3.2rem;">Hôtels populaires</h3>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="card bg-black border-0 shadow" style="overflow:hidden; border-radius:8px;">
+          <img src="https://lepetitjournal.com/_next/image?url=https%3A%2F%2Fbackoffice.lepetitjournal.com%2Fsites%2Fdefault%2Ffiles%2F2023-04%2Flas-arenas-balneario-resort%25281%2529.jpg&w=750&q=75" class="card-img-top" style="height:250px; object-fit:cover;" alt="Hotel Las Arenas">
+          <div class="card-body" style="border-top:1px solid rgba(255,255,255,.08);">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="card-title mb-0" style="font-family:'Playfair Display', serif; color:#f9f9f9; font-size:1.6rem;">Hotel Las Arenas</h5>
+              <span style="color:#f1d35d; font-weight:700; font-size:1.1rem;">★ 4.9</span>
             </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card shadow overflow-hidden" style="width: 18rem;">
-                <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/f7/6a/13/radisson-hotel-dakar.jpg?w=1200&h=-1&s=1" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Radisson Hotel Dakar</h5>
-                    <p class="card-text">Un hôtel de luxe situé à Dakar, offrant des chambres élégantes et des services de premier plan et exclusifs.</p>
-                    <a href="#" class="btn btn-warning">Visitez</a>
-                    <a href="#" class="btn btn-success">Réservez</a>
-                </div>
+            <p class="mb-2" style="color:#b5b5b5;"><i class="bi bi-geo-alt" style="color:#f1d35d;"></i> Valencia, Espagne</p>
+            <p class="card-text" style="color:#d6d6d6;">Un hôtel de luxe situé à proximité de la plage, offrant des chambres spacieuses et des services exceptionnels.</p>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a class="btn btn-warning btn-hero" href="#">Visitez</a>
+                <a class="btn btn-secondary btn-hero" href="#">Réservez</a>
             </div>
+          </div>
         </div>
-        <div class="col-lg-4">
-            <div class="card shadow overflow-hidden" style="width: 18rem;">
-                <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/22/cc/31/7a/concorde-de-luxe-resort.jpg?w=700&h=-1&s=1" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Concorde de luxe resort</h5>
-                    <p class="card-text">Un resort de luxe situé à proximité de la mer, offrant des chambres spacieuses et des services exceptionnels.</p>
-                    <a href="#" class="btn btn-warning">Visitez</a>
-                    <a href="#" class="btn btn-success">Réservez</a>
-                </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="card bg-black border-0 shadow" style="overflow:hidden; border-radius:8px;">
+          <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/f7/6a/13/radisson-hotel-dakar.jpg?w=1200&h=-1&s=1" class="card-img-top" style="height:250px; object-fit:cover;" alt="Radisson Hotel Dakar">
+          <div class="card-body" style="border-top:1px solid rgba(255,255,255,.08);">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="card-title mb-0" style="font-family:'Playfair Display', serif; color:#f9f9f9; font-size:1.6rem;">Radisson Hotel Dakar</h5>
+              <span style="color:#f1d35d; font-weight:700; font-size:1.1rem;">★ 4.8</span>
             </div>
+            <p class="mb-2" style="color:#b5b5b5;"><i class="bi bi-geo-alt" style="color:#f1d35d;"></i> Dakar, Sénégal</p>
+            <p class="card-text" style="color:#d6d6d6;">Un hôtel de luxe situé à Dakar, offrant des chambres élégantes et des services de premier plan et exclusifs.</p>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a class="btn btn-warning btn-hero" href="#">Visitez</a>
+                <a class="btn btn-secondary btn-hero" href="#">Réservez</a>
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="card bg-black border-0 shadow" style="overflow:hidden; border-radius:8px;">
+          <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/22/cc/31/7a/concorde-de-luxe-resort.jpg?w=700&h=-1&s=1" class="card-img-top" style="height:250px; object-fit:cover;" alt="Concorde de luxe resort">
+          <div class="card-body" style="border-top:1px solid rgba(255,255,255,.08);">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="card-title mb-0" style="font-family:'Playfair Display', serif; color:#f9f9f9; font-size:1.6rem;">Concorde de luxe resort</h5>
+              <span style="color:#f1d35d; font-weight:700; font-size:1.1rem;">★ 4.7</span>
+            </div>
+            <p class="mb-2" style="color:#b5b5b5;"><i class="bi bi-geo-alt" style="color:#f1d35d;"></i> Maldives</p>
+            <p class="card-text" style="color:#d6d6d6;">Un resort de luxe situé à proximité de la mer, offrant des chambres spacieuses et des services exceptionnels.</p>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a class="btn btn-warning btn-hero" href="#">Visitez</a>
+                <a class="btn btn-secondary btn-hero" href="#">Réservez</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="text-center mt-5">
+      <a class="btn btn-outline-warning px-5 py-3" href="#" style="font-weight:700; letter-spacing:0.08em;">Voir tous les hôtels</a>
+    </div>
+  </div>
 </div>    
 {% endblock %}

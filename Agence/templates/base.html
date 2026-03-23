@@ -8,16 +8,34 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+      /* Couleurs de navbar personnalisées */
+      .navbar-custom { background-color: #121212; }
+      .navbar-custom .navbar-brand { color: #f1d35d; font-weight: 900; letter-spacing: 0.08em; }
+      .navbar-custom .nav-link,
+      .navbar-custom .dropdown-item { color: #ffffff; }
+      .navbar-custom .nav-link:hover,
+      .navbar-custom .dropdown-item:hover { color: #ffffff; background-color: #dcae1b; }
+      .navbar-custom .nav-item.active .nav-link {
+        color: #f1d35d !important;
+        background-color: transparent !important;
+        border-radius: 0;
+        font-weight: 700;
+          }
+        body{
+            font-family: 'Times New Roman', Times, serif;
+          }
+    </style>
     <title>My Luxe Agence</title>
   </head>
   <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-custom">
         <a class="navbar-brand" href="{% url 'home' %}">Luxe Agence</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
                 <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
             </li>
@@ -57,5 +75,18 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script>
+      // Toggle active state de l'onglet en jaune quand on clique
+      document.addEventListener('DOMContentLoaded', function () {
+        const navLinks = document.querySelectorAll('.navbar-custom .nav-link');
+        navLinks.forEach((link) => {
+          link.addEventListener('click', function () {
+            navLinks.forEach((l) => l.parentElement.classList.remove('active'));
+            const parent = this.closest('.nav-item');
+            if (parent) parent.classList.add('active');
+          });
+        });
+      });
+    </script>
   </body>
 </html>
