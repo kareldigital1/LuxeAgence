@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container"> 
+    <div class="row mt-5 mb-5 shadow">
+        <div class="col-lg-6 shadow p-4">
+            <h3>Créer votre compte</h3>
+            <form method="post" class="row g-3">
+                {% csrf_token %}
+                <div class="col-md-12">
+                    <label for="inputprenom" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="inputprenom" name="{{ form.username.html_name }}">
+                    {% if form.username.errors %}
+                        <div class="text-danger">{{ form.username.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-12">
+                    <label for="inputEmail" class="form-label">Adresse email</label>
+                    <input type="email" class="form-control" id="inputEmail" name="{{ form.email.html_name }}" placeholder="luxeagency@gmail.com">
+                    {% if form.email.errors %}
+                        <div class="text-danger">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="inputmdp" class="form-label">Mot de passe</label>
+                    <input type="password" class="form-control" id="inputmdp" name="{{ form.password1.html_name }}">
+                    {% if form.password1.errors %}
+                        <div class="text-danger">{{ form.password1.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="inputmdp2" class="form-label">Confirmer mot de passe</label>
+                    <input type="password" class="form-control" id="inputmdp2" name="{{ form.password2.html_name }}">
+                    {% if form.password2.errors %}
+                        <div class="text-danger">{{ form.password2.errors }}</div>
+                    {% endif %}
+                </div>                
+                <div class="col-12">
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gridCheck">
+                    <label class="form-check-label" for="gridCheck">
+                        Check me out
+                    </label>
+                    </div>
+                </div>
+                {% if form.non_field_errors %}
+                    <div class="col-12">
+                        <div class="text-danger">{{ form.non_field_errors }}</div>
+                    </div>
+                {% endif %}
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">S'inscrire</button>
+                </div>
+            </form>
+            <p class="link text-center">Déjà inscrit ? <a href="{% url 'login_view' %}">Se connecter</a></p>
+        </div>
+        <div class="col-lg-6  ">
+             <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/c8/65/d8/arnor-de-luxe-hotel-spa.jpg?w=700&h=-1&s=1" alt="" class="img-fluid img-responsive">
+        </div>
+    </div>
+</div>
+{% endblock %}
