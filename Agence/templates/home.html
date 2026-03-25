@@ -58,6 +58,19 @@
   .card {
     background-color: rgba(50, 42, 7, 0.167) !important;
     border: 1px solid rgba(255,255,255,0.1) !important;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    overflow: hidden;
+  }
+  .card:hover {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55), 0 0 20px rgba(241, 213, 93, 0.35);
+    border-color: #f1d35d;
+    cursor: pointer;
+  }
+  .card-img-top {
+    transition: transform 0.35s ease;
+  }
+  .card:hover .card-img-top {
+    transform: scale(1.08);
   }
 </style>
 
@@ -65,11 +78,39 @@
   <div class="hero-content">
     <p class="hero-subtitle">Collection d'hôtels d'exception</p>
     <h1 class="hero-title">L'art du voyage, sublime</h1>
-    <p class="hero-text">Découvrez notre sélection exclusive d'hôtels de luxe à travers le monde. Chaque séjour est une expérience unique.</p>
+    <p class="hero-text" id="typing-text">Découvrez notre sélection exclusive d'hôtels de luxe à travers le monde. Chaque séjour est une expérience unique.</p>
     <a class="btn btn-primary btn-hero" href="#">EXPLORER NOS HÔTELS</a>
     <a class="btn btn-secondary btn-hero" href="#">EN SAVOIR PLUS</a>
   </div>
 </section>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const titleElement = document.querySelector('.hero-title');
+    const textElement = document.querySelector('#typing-text');
+    const title = "L'art du voyage, sublime";
+    const paragraph = "Découvrez notre sélection exclusive d'hôtels de luxe à travers le monde. Chaque séjour est une expérience unique.";
+
+    function typeLine(element, fullText, delay = 75, callback) {
+      element.textContent = '';
+      let i = 0;
+      const interval = setInterval(() => {
+        element.textContent += fullText.charAt(i);
+        i++;
+        if (i >= fullText.length) {
+          clearInterval(interval);
+          if (callback) callback();
+        }
+      }, delay);
+    }
+
+    titleElement.textContent = '';
+    textElement.textContent = '';
+
+    typeLine(titleElement, title, 90, () => {
+      setTimeout(() => typeLine(textElement, paragraph, 35), 300);
+    });
+  });
+</script>
 
 <div class="container-fluid py-5 bg-dark text-white" style="background: linear-gradient(140deg, rgba(16,16,16,0.95), rgba(10,10,10,0.95));">
   <div class="container">
