@@ -20,14 +20,14 @@
   .home-hero .hero-subtitle {
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    color: #f1d35d;
+    color: #dcae1b;
     margin-bottom: 1rem;
     font-weight: 600;
   }
   .home-hero .hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    font-weight: 700;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 65px;
+    font-weight: 450;
     margin-bottom: 1rem;
     line-height: 1.1;
   }
@@ -42,14 +42,14 @@
     margin: 0 0.5rem;
   }
   .home-hero .btn-primary {
-    background-color: #f1d35d;
-    border-color: #f1d35d;
+    background-color: #dcae1b;
+    border-color: #dcae1b;
     color: #121212;
   }
   .home-hero .btn-secondary {
     background-color: transparent;
-    border-color: #f1d35d;
-    color: #f1d35d;
+    border-color: #dcae1b;
+    color: #dcae1b;
   }
   .home-hero .btn-secondary:hover {
     background-color: rgba(241,211,93,0.2);
@@ -63,7 +63,7 @@
   }
   .card:hover {
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55), 0 0 20px rgba(241, 213, 93, 0.35);
-    border-color: #f1d35d;
+    border-color: #dcae1b;
     cursor: pointer;
   }
   .card-img-top {
@@ -77,17 +77,17 @@
 <section class="home-hero">
   <div class="hero-content">
     <p class="hero-subtitle">Collection d'hôtels d'exception</p>
-    <h1 class="hero-title">L'art du voyage, sublime</h1>
-    <p class="hero-text" id="typing-text">Découvrez notre sélection exclusive d'hôtels de luxe à travers le monde. Chaque séjour est une expérience unique.</p>
-    <a class="btn btn-primary btn-hero" href="#">EXPLORER NOS HÔTELS</a>
-    <a class="btn btn-secondary btn-hero" href="#">EN SAVOIR PLUS</a>
+    <h1 class="hero-title">L'art du voyage, sublimé</h1>
+    <p class="hero-text text-muted" id="typing-text">Découvrez notre sélection exclusive d'hôtels de luxe à travers le monde. Chaque séjour est une expérience unique.</p>
+    <a class="btn btn-primary btn-hero" href="{% url 'list_hotel' %}">EXPLORER NOS HÔTELS</a>
+    <a class="btn btn-secondary btn-hero" href="{% url 'about' %}">EN SAVOIR PLUS</a>
   </div>
 </section>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const titleElement = document.querySelector('.hero-title');
     const textElement = document.querySelector('#typing-text');
-    const title = "L'art du voyage, sublime";
+    const title = "L'art du voyage, sublimé";
     const paragraph = "Découvrez notre sélection exclusive d'hôtels de luxe à travers le monde. Chaque séjour est une expérience unique.";
 
     function typeLine(element, fullText, delay = 75, callback) {
@@ -112,9 +112,9 @@
   });
 </script>
 
-<div class="container-fluid py-5 bg-dark text-white" style="background: linear-gradient(140deg, rgba(16,16,16,0.95), rgba(10,10,10,0.95));">
-  <div class="container">
-    <h2 class="text-center text-uppercase" style="color:#f1d35d; letter-spacing:0.2em; font-weight:600;">Nos établissements</h2>
+<div class="container-fluid py-5 bg-dark text-white" style="background: linear-gradient(140deg, rgba(16,16,16,0.95), rgba(10,10,10,0.95));" >
+  <div class="container" >
+    <h2 class="text-center text-uppercase" style="color:#dcae1b; letter-spacing:0.2em; font-weight:600;">Nos établissements</h2>
     <h3 class="text-center mb-4" style="font-family:'Playfair Display', serif; font-weight:700; font-size:3.2rem;">Hôtels populaires</h3>
     <div class="row g-4">
       <div class="col-md-6 col-lg-4">
@@ -123,9 +123,9 @@
           <div class="card-body" style="border-top:1px solid rgba(255,255,255,.08);">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <h5 class="card-title mb-0" style="font-family:'Playfair Display', serif; color:#f9f9f9; font-size:1.6rem;">Hotel Las Arenas</h5>
-              <span style="color:#f1d35d; font-weight:700; font-size:1.1rem;">★ 4.9</span>
+              <span style="color:#dcae1b; font-weight:700; font-size:1.1rem;">★ 4.9</span>
             </div>
-            <p class="mb-2" style="color:#b5b5b5;"><i class="bi bi-geo-alt" style="color:#f1d35d;"></i> Valencia, Espagne</p>
+            <p class="mb-2" style="color:#b5b5b5;"><i class="bi bi-geo-alt" style="color:#dcae1b;"></i> Valencia, Espagne</p>
             <p class="card-text" style="color:#d6d6d6;">Un hôtel de luxe situé à proximité de la plage, offrant des chambres spacieuses et des services exceptionnels.</p>
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <a class="btn btn-warning btn-hero" href="#">Visitez</a>
@@ -140,9 +140,9 @@
           <div class="card-body" style="border-top:1px solid rgba(255,255,255,.08);">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <h5 class="card-title mb-0" style="font-family:'Playfair Display', serif; color:#f9f9f9; font-size:1.6rem;">Radisson Hotel Dakar</h5>
-              <span style="color:#f1d35d; font-weight:700; font-size:1.1rem;">★ 4.8</span>
+              <span style="color:#dcae1b; font-weight:700; font-size:1.1rem;">★ 4.8</span>
             </div>
-            <p class="mb-2" style="color:#b5b5b5;"><i class="bi bi-geo-alt" style="color:#f1d35d;"></i> Dakar, Sénégal</p>
+            <p class="mb-2" style="color:#b5b5b5;"><i class="bi bi-geo-alt" style="color:#dcae1b;"></i> Dakar, Sénégal</p>
             <p class="card-text" style="color:#d6d6d6;">Un hôtel de luxe situé à Dakar, offrant des chambres élégantes et des services de premier plan et exclusifs.</p>
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <a class="btn btn-warning btn-hero" href="#">Visitez</a>
@@ -157,9 +157,9 @@
           <div class="card-body" style="border-top:1px solid rgba(255,255,255,.08);">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <h5 class="card-title mb-0" style="font-family:'Playfair Display', serif; color:#f9f9f9; font-size:1.6rem;">Concorde de luxe resort</h5>
-              <span style="color:#f1d35d; font-weight:700; font-size:1.1rem;">★ 4.7</span>
+              <span style="color:#dcae1b; font-weight:700; font-size:1.1rem;">★ 4.7</span>
             </div>
-            <p class="mb-2" style="color:#b5b5b5;"><i class="bi bi-geo-alt" style="color:#f1d35d;"></i> Maldives</p>
+            <p class="mb-2" style="color:#b5b5b5;"><i class="bi bi-geo-alt" style="color:#dcae1b;"></i> Maldives</p>
             <p class="card-text" style="color:#d6d6d6;">Un resort de luxe situé à proximité de la mer, offrant des chambres spacieuses et des services exceptionnels.</p>
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <a class="btn btn-warning btn-hero" href="#">Visitez</a>
@@ -170,7 +170,7 @@
       </div>
     </div>
     <div class="text-center mt-5">
-      <a class="btn btn-outline-warning px-5 py-3" href="#" style="font-weight:700; letter-spacing:0.08em;">Voir tous les hôtels</a>
+      <a class="btn btn-outline-warning px-5 py-3" href="{% url 'list_hotel' %}" style="font-weight:700; letter-spacing:0.08em;">Voir tous les hôtels</a>
     </div>
   </div>
 </div>    

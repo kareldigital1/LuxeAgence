@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex" style="min-height: 100vh;">
+    <!-- Sidebar -->
+    {% include 'administrateur/sidebar.html' %}
+ 
+    <div class="container-fluid py-4 px-4" style="flex: 1; background-color: #f8f9fa;">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="fw-bold">Bienvenue, {{ user.username}}</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-auto" style="width: 250px; ">
+                <div class="card shadow-sm border-0 mb-4" style="height: 210px;">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Hôtels</h5>
+                    </div>
+                    <div class="card-body">
+                    <h1 class="display-5">{{ nb_hotels }}</h1>
+                        <p class="text-muted">Nombre total d'hôtels </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-auto" style="width: 250px; ">
+                <div class="card shadow-sm border-0 mb-4" style="height: 210px;">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Chambres</h5>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="display-5">{{ nb_chambres }}</h1>
+                        <p class="text-muted">Nombre de chambres disponibles</p>
+                    </div>
+                </div>
+            </div>
+             <div class="col-lg-auto" style="width: 250px; ">
+                <div class="card shadow-sm border-0 mb-4" style="height: 210px;">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Réservations</h5>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="display-5">{{ nb_reservations }}</h1>
+                        <p class="text-muted">Nombre de réservations effectuées</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-auto" style="width: 250px; ">
+                <div class="card shadow-sm border-0 mb-4" style="height: 210px;">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Clients</h5>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="display-5">{{ nb_clients }}</h1>
+                        <p class="text-muted">Nombre de clients inscrits</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    
+    input, textarea, select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #0d6efd;
+        outline: none;
+        box-shadow: 0 0 6px rgba(13, 110, 253, 0.4);
+    }
+
+    input:hover, textarea:hover, select:hover {
+        border-color: #86b7fe;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    .form-label {
+        margin-bottom: 6px;
+    }
+
+    .btn-success:hover {
+        background-color: #198754;
+        transform: scale(1.03);
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .card {
+        transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+    }
+</style>
+<div class="d-flex" style="min-height: 100vh;">
+   <!-- Sidebar -->
+    {% include 'administrateur/sidebar.html' %}
+<div class="container py-5" style="flex: 1; background-color: #f8f9fa;">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <!-- Header -->
+                <div class="card-header bg-dark text-white text-center rounded-top-4">
+                    <h4 class="mb-0">
+                        {% if form.instance.pk %} Modifier une chambre {% else %} Créer une chambre {% endif %}
+                    </h4>
+                </div>
+
+                <!-- Body -->
+                <div class="card-body p-4">
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        
+                        <div class="mb-3">
+                            <label for="id_room_number" class="form-label fw-semibold">
+                                <i class="bi bi-type me-1"></i> Numéro de chambre
+                            </label>
+                            {{ form.room_number }}
+                        </div>
+
+                        
+                        <div class="mb-3">
+                            <label for="id_room_type" class="form-label fw-semibold">
+                                <i class="bi bi-list me-1"></i> Type de chambre
+                            </label>
+                            {{ form.room_type }}
+                        </div>
+
+                        
+
+                        <div class="mb-4">
+                            <label for="id_price_per_night" class="form-label fw-semibold">
+                                <i class="bi bi-currency-dollar me-1"></i> Prix par nuit
+                            </label>
+                            {{ form.price_per_night }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_capacity" class="form-label fw-semibold">
+                                <i class="bi bi-people me-1"></i> Capacité
+                            </label>
+                            {{ form.capacity }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_image" class="form-label fw-semibold">
+                                <i class="bi bi-image me-1"></i> Image
+                            </label>
+                            {{ form.image }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_hotel" class="form-label fw-semibold">
+                                <i class="bi bi-building me-1"></i> Hôtel
+                            </label>
+                            {{ form.hotel }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_available" class="form-label fw-semibold">
+                                <i class="bi bi-check2-circle me-1"></i> Disponibilité
+                            </label>
+                            {{ form.available }}
+                        </div>
+                        
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'gestrooms' %}" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left"></i> Annuler
+                            </a>
+
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-check-circle"></i> Enregistrer
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

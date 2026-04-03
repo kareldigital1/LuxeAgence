@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4" style="width: 50%;">
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">{{ hotel.name }}</h3>
+        </div>
+        <div class="card-body">
+                       <!-- Image -->
+            {% if hotel.image %}
+                <div class="mb-3">
+                    <img src="{{ hotel.image.url }}" alt="{{ hotel.name }}" class="img-fluid rounded" style="max-height: 400px; object-fit: cover; width: 100%;">
+                </div>
+            {% endif %}
+
+            <!-- Contenu -->
+            <p>{{ hotel.description }}</p>
+             <!-- Proprietaire -->
+            <p><strong>Propriétaire : </strong> {{ hotel.owner }}</p>
+                <!-- Localisation -->
+            <p><strong>Localisation : </strong> {{ hotel.address }}, {{ hotel.city }}, {{ hotel.country }}</p>
+             
+                <!-- Bouton de réservation -->
+            <div class="d-grid">
+                <a href="{% url 'list_room' %}" class="btn btn-primary btn-lg">Voir les chambres</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

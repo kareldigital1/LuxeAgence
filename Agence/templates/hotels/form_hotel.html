@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    
+    input, textarea, select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #0d6efd;
+        outline: none;
+        box-shadow: 0 0 6px rgba(13, 110, 253, 0.4);
+    }
+
+    input:hover, textarea:hover, select:hover {
+        border-color: #86b7fe;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    .form-label {
+        margin-bottom: 6px;
+    }
+
+    .btn-success:hover {
+        background-color: #198754;
+        transform: scale(1.03);
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .card {
+        transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+    }
+</style>
+<div class="d-flex" style="min-height: 100vh;">
+   <!-- Sidebar -->
+    {% include 'administrateur/sidebar.html' %}
+<div class="container py-5" style="flex: 1; background-color: #f8f9fa;">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <!-- Header -->
+                <div class="card-header bg-dark text-white text-center rounded-top-4">
+                    <h4 class="mb-0">
+                        {% if form.instance.pk %} Modifier un hôtel {% else %} Créer un hôtel {% endif %}
+                    </h4>
+                </div>
+
+                <!-- Body -->
+                <div class="card-body p-4">
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="id_title" class="form-label fw-semibold">
+                                <i class="bi bi-type me-1"></i> Nom de l'hôtel
+                            </label>
+                            {{ form.name }}
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="id_description" class="form-label fw-semibold">
+                                <i class="bi bi-card-text me-1"></i> Description
+                            </label>
+                            {{ form.description }}
+                        </div>
+
+                        <!-- Assigned To -->
+                        <div class="mb-4">
+                            <label for="id_assigned_to" class="form-label fw-semibold">
+                                <i class="bi bi-globe me-1"></i> Pays
+                            </label>
+                            {{ form.country }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_assigned_to" class="form-label fw-semibold">
+                                <i class="bi bi-city me-1"></i> Ville
+                            </label>
+                            {{ form.city }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_assigned_to" class="form-label fw-semibold">
+                                <i class="bi bi-geo-alt me-1"></i> Adresse
+                            </label>
+                            {{ form.address }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_assigned_to" class="form-label fw-semibold">
+                                <i class="bi bi-image me-1"></i> Image
+                            </label>
+                            {{ form.image }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_assigned_to" class="form-label fw-semibold">
+                                <i class="bi bi-person me-1"></i> Propriétaire
+                            </label>
+                            {{ form.owner }}
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'gesthotels' %}" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left"></i> Annuler
+                            </a>
+
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-check-circle"></i> Enregistrer
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

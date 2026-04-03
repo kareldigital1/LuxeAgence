@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid py-5 text-white" style="background: linear-gradient(140deg, rgba(16,16,16,0.95), rgba(10,10,10,0.95));" >
+  <div class="container">
+
+    <h2 class="text-center text-uppercase" style="color:#dcae1b; letter-spacing: 6px; font-weight:600;" data-aos="fade-down">
+      Tous les hotels disponibles
+    </h2>
+
+    <div class="row justify-content-center mt-4" data-aos="fade-up">
+      <div class="col-md-8 col-lg-6">
+        <form id="search-form" method="get" class="input-group mb-4">
+          <input id="search-input" type="text" name="q" class="form-control" placeholder="Rechercher par ville, pays ou nom..." value="{{ request.GET.q|default:'' }}" aria-label="Recherche d'hôtels" autocomplete="off" style="background: linear-gradient(140deg, rgba(16,16,16,0.95), rgba(10,10,10,0.95)); border:1px solid rgb(79, 69, 55);">
+        </form>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-0" data-aos="fade-up">
+      {% for hotel in hotels %}
+          <div class="col-md-6 col-lg-4">
+            <div class="card bg-black border-0 shadow" style="overflow:hidden; border-radius:8px;">
+              {% if hotel.image %}
+              <img src="{{ hotel.image.url }}" class="card-img-top" style="height:250px; object-fit:cover;" alt="{{ hotel.name }}">
+              {% endif %}
+              <div class="card-body" style="border-top:1px solid rgb(47, 35, 18); background-color: rgb(14, 14, 14); ">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h5 class="card-title mb-0" style="color: white;">
+                    {{ hotel.name }}
+                  </h5>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <a class="btn btn-secondary btn-hero" href="{% url 'detail_hotel' hotel.id %}">Voir les détails <i class="bi bi-arrow-right me-1"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+      {% empty %}
+      <div class="col-12">
+        <p class="text-muted text-center">Aucun hotel disponible pour le moment.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

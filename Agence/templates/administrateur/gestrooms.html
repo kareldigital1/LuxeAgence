@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex" style="min-height: 100vh;">
+     <!-- Sidebar -->
+    {% include 'administrateur/sidebar.html' %}
+   
+    <div class="container-fluid py-4 px-4" style="flex: 1; background-color: #f8f9fa;">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="fw-bold">Gestion des chambres</h2>
+        </div>
+
+        <div class="row g-4">
+            <!-- afficher les chambres sur le dashboard -->
+            <div class="col-lg-12">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Liste des chambres</h5>
+                        <i class="fa fa-wave-pulse text-muted"></i>
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'create_room' %}" class="btn btn-primary mb-3">
+                            <small><i class="bi bi-plus"></i></small> Ajouter une chambre
+                        </a>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Numéro des chambres</th>
+                                    <th>Type de chambre</th>
+                                    <th>Disponibilité</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for room in rooms %}
+                                <tr>
+                                    <td>{{ room.room_number }}</td>
+                                    <td>{{ room.room_type }}</td>
+                                    <td>{{ room.available|yesno:"Disponible,Indisponible" }}</td>
+                                    <td>
+                                        <a href="{% url 'detail_room' room.id %}" class="btn btn-info btn-sm mb-1"><i class="bi bi-eye "></i></a>
+                                        <a href="{% url 'edit_room' room.id %}" class="btn btn-warning btn-sm mb-1"><i class="bi bi-pencil "></i></a>
+                                        <form action="{% url 'delete_room' room.id %}" method="post" style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('Voulez-vous vraiment supprimer cette chambre ?');">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Aucune chambre disponible</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
