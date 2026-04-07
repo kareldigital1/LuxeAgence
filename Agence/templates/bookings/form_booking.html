@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    
+    input, textarea, select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #0d6efd;
+        outline: none;
+        box-shadow: 0 0 6px rgba(13, 110, 253, 0.4);
+    }
+
+    input:hover, textarea:hover, select:hover {
+        border-color: #86b7fe;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    .form-label {
+        margin-bottom: 6px;
+    }
+
+    .btn-success:hover {
+        background-color: #198754;
+        transform: scale(1.03);
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .card {
+        transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+    }
+</style>
+<div class="d-flex" style="min-height: 100vh;">
+<div class="container py-5" style="flex: 1; background-color: #f8f9fa;">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <!-- Header -->
+                <div class="card-header bg-dark text-white text-center rounded-top-4">
+                    <h4 class="mb-0">
+                        {% if form.instance.pk %} Modifier une réservation {% else %} Créer une réservation {% endif %}
+                    </h4>
+                </div>
+
+                <!-- Body -->
+                <div class="card-body p-4">
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="id_full_name" class="form-label fw-semibold">
+                                <i class="bi bi-person me-1"></i> Nom complet 
+                            </label>
+                            {{ form.full_name }}
+                        </div>
+
+                        
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label fw-semibold">
+                                <i class="bi bi-envelope me-1"></i> Email
+                            </label>
+                            {{ form.email }}
+                        </div>
+
+                        
+                        <div class="mb-4">
+                            <label for="id_phone" class="form-label fw-semibold">
+                                <i class="bi bi-telephone me-1"></i> Téléphone
+                            </label>
+                            {{ form.phone }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_room" class="form-label fw-semibold">
+                                <i class="bi bi-house me-1"></i> Numéro de chambre
+                            </label>
+                            <select name="room" class="form-select" required id="id_room">
+                                {% for room in rooms %}
+                                <option value="{{ room.id }}" data-price="{{ room.price_per_night }}" {% if form.instance.room.id == room.id %}selected{% endif %}>{{ room.room_number }} - {{ room.room_type }} ({{ room.price_per_night }}€/nuit)</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_check_in" class="form-label fw-semibold">
+                                <i class="bi bi-calendar me-1"></i> Entrée
+                            </label>
+                            {{ form.check_in }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_check_out" class="form-label fw-semibold">
+                                <i class="bi bi-calendar me-1"></i> Sortie
+                            </label>
+                            {{ form.check_out }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-currency-dollar me-1"></i> Prix total
+                            </label>
+                            <p id="total_price_display" class="form-control-plaintext fw-bold text-success">Le prix sera calculé automatiquement</p>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'gestbooking' %}" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left"></i> Annuler
+                            </a>
+
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-check-circle"></i> Enregistrer
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+<script>
+function calculateTotalPrice() {
+    const roomSelect = document.getElementById('id_room');
+    const checkIn = document.getElementById('id_check_in').value;
+    const checkOut = document.getElementById('id_check_out').value;
+    const display = document.getElementById('total_price_display');
+
+    if (!roomSelect.value || !checkIn || !checkOut) {
+        display.textContent = 'Le prix sera calculé automatiquement';
+        return;
+    }
+
+    const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+    const pricePerNight = parseFloat(selectedOption.getAttribute('data-price'));
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    const nights = (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
+
+    if (nights > 0) {
+        const total = nights * pricePerNight;
+        display.textContent = total.toFixed(2) + ' €';
+    } else {
+        display.textContent = 'Dates invalides';
+    }
+}
+
+document.getElementById('id_room').addEventListener('change', calculateTotalPrice);
+document.getElementById('id_check_in').addEventListener('change', calculateTotalPrice);
+document.getElementById('id_check_out').addEventListener('change', calculateTotalPrice);
+
+// Calculate on load if editing
+document.addEventListener('DOMContentLoaded', calculateTotalPrice);
+</script>

@@ -24,6 +24,11 @@ urlpatterns = [
     path('rooms/<int:pk>/', views.DetailRoomView.as_view(), name='detail_room'),
     path('rooms/<int:pk>/edit/', views.UpdateRoomView.as_view(), name='edit_room'),
     path('rooms/<int:pk>/delete/', views.DeleteRoomView.as_view(), name='delete_room'),
+    path('gestionbookings/', views.GestionBookingView.as_view(), name='gestbooking'),
+    path('bookings/create/', views.CreateBookingView.as_view(), name='create_booking'),
+    path('bookings/<int:pk>/', views.DetailBookingView.as_view(), name='detail_booking'),
+    path('bookings/<int:pk>/edit/', views.UpdateBookingView.as_view(), name='edit_booking'),
+    path('bookings/<int:pk>/delete/', views.DeleteBookingView.as_view(), name='delete_booking'),
 
 ]
 

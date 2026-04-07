@@ -38,16 +38,29 @@ class HotelForm(forms.ModelForm):
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
-        fields = ['full_name', 'email', 'phone', 'room', 'check_in', 'check_out', 'total_price']
+        fields = ['full_name', 'email', 'phone', 'room', 'check_in', 'check_out']
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom complet', 'required': True}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Adresse email', 'required': True}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Numéro de téléphone', 'required': True}),
             'room': forms.Select(attrs={'class': 'form-select', 'required': True}),
-            'check_in': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'required': True}),
-            'check_out': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'required': True}),
-            'total_price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Prix total', 'required': True, 'step': '0.01'}),
+            'check_in': forms.DateInput(
+                        format='%Y-%m-%d',
+                        attrs={'class': 'form-control', 'type': 'date'}
+                    ),
+            'check_out': forms.DateInput(
+                        format='%Y-%m-%d',
+                        attrs={'class': 'form-control', 'type': 'date'}
+                    ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add data-price to room options
+        choices = []
+        for room in Room.objects.all():
+            choices.append((room.id, f"{room.room_number} - {room.room_type} ({room.price_per_night}/nuit)", {'data-price': room.price_per_night}))
+        self.fields['room'].choices = choices
 
 
 class RoomForm(forms.ModelForm):

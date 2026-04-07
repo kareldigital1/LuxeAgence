@@ -1,5 +1,5 @@
 from django.shortcuts import render , redirect
-from .form import CustomUserCreationForm
+from .form import CustomUserCreationForm, HotelForm, BookingForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import Hotel, Booking, Room
@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, UpdateView, ListView, CreateView, DeleteView, DetailView
 from django.db.models import Q
+
 
 # Create your views here.
 #Pour afficher la page d'accueil
@@ -127,41 +128,65 @@ class DeleteRoomView(LoginRequiredMixin,DeleteView):
     model = Room
     success_url = '/gestionrooms/'
 
-# #Pour afficher la page de gestion des reservations pour les administrateurs
-# class GestionBookingView(LoginRequiredMixin,ListView):
-#     model = Booking
-#     template_name = 'administrateur/gestbookings.html'
-#     context_object_name = 'bookings'
+#Pour afficher la page de gestion des reservations pour les administrateurs
+class GestionBookingView(LoginRequiredMixin,ListView):
+    model = Booking
+    template_name = 'administrateur/gestbooking.html'
+    context_object_name = 'bookings'
 
-# #Pour afficher les details d'une reservation
-# class DetailBookingView(LoginRequiredMixin,DetailView):
-#     model = Booking
-#     template_name = 'bookings/detail_booking.html'
-#     context_object_name = 'booking'
+#Pour afficher les details d'une reservation
+class DetailBookingView(LoginRequiredMixin,DetailView):
+    model = Booking
+    template_name = 'bookings/detail_booking.html'
+    context_object_name = 'booking'
 
-# #Pour créer une reservation
-# class CreateBookingView(CreateView):
-#     model = Booking
-#     template_name = 'bookings/form_booking.html' 
-#     fields = ['user', 'room', 'check_in', 'check_out', 'status']
-#     success_url = '/gestionbookings/'
+#Pour créer une reservation
+class CreateBookingView(CreateView):
+    model = Booking
+    form_class = BookingForm
+    template_name = 'bookings/form_booking.html' 
+    success_url = '/gestionbookings/'
 
-# #Pour modifier une reservation
-# class UpdateBookingView(UpdateView):
-#     model = Booking
-#     template_name = 'bookings/form_booking.html' 
-#     fields = ['user', 'room', 'check_in', 'check_out', 'status']
-#     success_url = '/gestionbookings/'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['rooms'] = Room.objects.all()
+        return context
 
-# #Pour supprimer une reservation
-# class DeleteBookingView(LoginRequiredMixin,DeleteView):
-#     model = Booking
-#     success_url = '/gestionbookings/'
+    def form_valid(self, form):
+        booking = form.save(commit=False)
+        nights = (booking.check_out - booking.check_in).days
+        booking.total_price = nights * booking.room.price_per_night
+        booking.save()
+        return super().form_valid(form)
+
+#Pour modifier une reservation
+class UpdateBookingView(UpdateView):
+    model = Booking
+    form_class = BookingForm
+    template_name = 'bookings/form_booking.html' 
+    success_url = '/gestionbookings/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['rooms'] = Room.objects.all()
+        return context
+
+    def form_valid(self, form):
+        booking = form.save(commit=False)
+        nights = (booking.check_out - booking.check_in).days
+        booking.total_price = nights * booking.room.price_per_night
+        booking.save()
+        return super().form_valid(form)
+
+#Pour supprimer une reservation
+class DeleteBookingView(LoginRequiredMixin,DeleteView):
+    model = Booking
+    success_url = '/gestionbookings/'
 
 #Pour afficher le dashboard de l'administrateur avec les statistiques
 class DashboardView(LoginRequiredMixin,TemplateView):
     template_name = 'administrateur/dashboard.html'
-    login_url = 'login'
+    login_url = 'login_view'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
