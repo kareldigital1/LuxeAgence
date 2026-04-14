@@ -17,11 +17,21 @@
                 <p><strong>Type de chambre : </strong> {{ room.room_type }}</p>
                 <p><strong>Prix par nuit : </strong> {{ room.price_per_night }} FCFA</p>
                 <p><strong>Capacité : </strong> {{ room.capacity }} personnes</p>
-                <p><strong>Disponibilité : </strong> {% if room.available %}Disponible{% else %}Indisponible{% endif %}</p>
+                <p><strong>Disponibilité : </strong> 
+                  {% if room.available %}
+                    <span class="badge bg-success">Disponible</span>
+                  {% else %}
+                    <span class="badge bg-danger">Indisponible</span>
+                  {% endif %}
+                </p>
                 <p><strong>Hôtel : </strong> {{ room.hotel.name }}</p>
                 <!-- Bouton de réservation -->
             <div class="d-grid">
-                <a href="#" class="btn btn-primary btn-lg">Réserver maintenant</a>
+                {% if room.available %}
+                    <a href="{% url 'create_booking' %}?room_id={{ room.id }}" class="btn btn-primary btn-lg">Réserver maintenant</a>
+                {% else %}
+                    <button class="btn btn-secondary btn-lg" disabled>Chambre Indisponible</button>
+                {% endif %}
             </div>
 
         </div>

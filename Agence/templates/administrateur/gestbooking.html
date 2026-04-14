@@ -23,38 +23,48 @@
                         <a href="{% url 'create_booking' %}" class="btn btn-primary mb-3">
                             <small><i class="bi bi-plus"></i></small> Ajouter une réservation
                         </a>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Nom du client</th>
-                                    <th>Chambre</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for booking in bookings %}
-                                <tr>
-                                    <td>{{ booking.full_name }}</td>
-                                    <td>{{ booking.room.room_number }}</td>
-                                    <td>
-                                        <a href="{% url 'detail_booking' booking.id %}" class="btn btn-info btn-sm mb-1"><i class="bi bi-eye "></i></a>
-                                        <a href="{% url 'edit_booking' booking.id %}" class="btn btn-warning btn-sm mb-1"><i class="bi bi-pencil "></i></a>
-                                        <form action="{% url 'delete_booking' booking.id %}" method="post" style="display:inline;">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Voulez-vous vraiment supprimer cette réservation ?');">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted">Aucune réservation disponible</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        <div style="overflow-x: auto;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nom du client</th>
+                                        <th>Téléphone </th>
+                                        <th>Email</th>
+                                        <th>Chambre</th>
+                                        <th>Séjour</th>
+                                        <th>Prix total</th>
+                                        <th>Date de création de la réservation</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for booking in bookings %}
+                                    <tr>
+                                        <td>{{ booking.full_name }}</td>
+                                        <td>{{ booking.phone }}</td>
+                                        <td>{{ booking.email }}</td>
+                                        <td>{{ booking.room.room_number }}</td>
+                                        <td>{{ booking.check_in }} à {{ booking.check_out }}</td>
+                                        <td>{{ booking.total_price }} Fcfa</td>
+                                        <td>{{ booking.created_at }}</td>
+                                        <td>
+                                            <form action="{% url 'delete_booking' booking.id %}" method="post" style="display:inline;">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Voulez-vous vraiment supprimer cette réservation ?');">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">Aucune réservation disponible</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,4 +73,3 @@
 </div>
 
 {% endblock %}
-

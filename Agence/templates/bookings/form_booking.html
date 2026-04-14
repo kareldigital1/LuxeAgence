@@ -62,6 +62,11 @@
                     <h4 class="mb-0">
                         {% if form.instance.pk %} Modifier une réservation {% else %} Créer une réservation {% endif %}
                     </h4>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
 
                 <!-- Body -->
@@ -95,14 +100,37 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="id_room" class="form-label fw-semibold">
+                            <label class="form-label fw-semibold">
                                 <i class="bi bi-house me-1"></i> Numéro de chambre
                             </label>
-                            <select name="room" class="form-select" required id="id_room">
-                                {% for room in rooms %}
-                                <option value="{{ room.id }}" data-price="{{ room.price_per_night }}" {% if form.instance.room.id == room.id %}selected{% endif %}>{{ room.room_number }} - {{ room.room_type }} ({{ room.price_per_night }}€/nuit)</option>
-                                {% endfor %}
-                            </select>
+                            {% if single_room or form.instance.pk %}
+                                <!-- Affichage en lecture seule si chambre unique ou si modification -->
+                                {% if form.instance.pk %}
+                                    <!-- Mode modification: afficher la chambre actuellement sélectionnée -->
+                                    <div class="form-control" style="background-color: #f8f9fa; cursor: not-allowed;">
+                                        {{ form.instance.room.room_number }} - {{ form.instance.room.room_type }} ({{ form.instance.room.price_per_night }}€/nuit)
+                                    </div>
+                                    <input type="hidden" name="room" value="{{ form.instance.room.id }}">
+                                {% else %}
+                                    <!-- Mode single_room: afficher la chambre unique -->
+                                    {% for room in rooms %}
+                                    <div class="form-control" style="background-color: #f8f9fa; cursor: not-allowed;">
+                                        {{ room.room_number }} - {{ room.room_type }} ({{ room.price_per_night }}€/nuit)
+                                    </div>
+                                    <input type="hidden" name="room" value="{{ room.id }}">
+                                    {% endfor %}
+                                {% endif %}
+                            {% else %}
+                                <!-- Select dropdown si création nouvelle réservation -->
+                                <select name="room" class="form-select" required id="id_room">
+                                    <option value="">-- Sélectionner une chambre --</option>
+                                    {% for room in rooms %}
+                                        {% if room.available %}
+                                        <option value="{{ room.id }}" data-price="{{ room.price_per_night }}">{{ room.room_number }} - {{ room.room_type }} ({{ room.price_per_night }}€/nuit)</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
                         </div>
 
                         <div class="mb-4">
@@ -110,6 +138,13 @@
                                 <i class="bi bi-calendar me-1"></i> Entrée
                             </label>
                             {{ form.check_in }}
+                            {% if form.check_in.errors %}
+                                <div class="text-danger small mt-2">
+                                    {% for error in form.check_in.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
 
                         <div class="mb-4">
@@ -117,6 +152,14 @@
                                 <i class="bi bi-calendar me-1"></i> Sortie
                             </label>
                             {{ form.check_out }}
+                            {% if form.check_out.errors %}
+                                <div class="text-danger small mt-2">
+                                    {% for error in form.check_out.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                         </div>
 
                         <div class="mb-4">
@@ -132,9 +175,15 @@
                                 <i class="bi bi-arrow-left"></i> Annuler
                             </a>
 
-                            <button type="submit" class="btn btn-success px-4">
-                                <i class="bi bi-check-circle"></i> Enregistrer
-                            </button>
+                            {% if form.instance.pk %}
+                                <a href="{% url 'detail_booking' form.instance.pk %}" class="btn btn-outline-success px-4">
+                                    <i class="bi bi-arrow-right"></i> Suivant
+                                </a>
+                            {% else %}
+                                <button type="submit" class="btn btn-success px-4">
+                                    <i class="bi bi-arrow-right"></i> Suivant
+                                </button>
+                            {% endif %}
                         </div>
 
                     </form>
@@ -156,13 +205,43 @@ function calculateTotalPrice() {
     const checkOut = document.getElementById('id_check_out').value;
     const display = document.getElementById('total_price_display');
 
-    if (!roomSelect.value || !checkIn || !checkOut) {
+    if (!checkIn || !checkOut) {
         display.textContent = 'Le prix sera calculé automatiquement';
         return;
     }
 
-    const selectedOption = roomSelect.options[roomSelect.selectedIndex];
-    const pricePerNight = parseFloat(selectedOption.getAttribute('data-price'));
+    let pricePerNight = null;
+
+    // Vérifier si c'est un select (multiple chambres) ou un champ readonly (chambre unique)
+    if (roomSelect) {
+        if (!roomSelect.value) {
+            display.textContent = 'Le prix sera calculé automatiquement';
+            return;
+        }
+        const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+        pricePerNight = parseFloat(selectedOption.getAttribute('data-price'));
+    } else {
+        // Si pas de select, chercher le prix dans les données du formulaire
+        const roomInput = document.querySelector('input[name="room"]');
+        if (!roomInput) {
+            display.textContent = 'Le prix sera calculé automatiquement';
+            return;
+        }
+        // Essayer de récupérer le prix depuis l'attribut data
+        const priceDisplay = document.querySelector('.form-control[style*="background-color"]');
+        if (priceDisplay) {
+            const priceMatch = priceDisplay.textContent.match(/\((\d+(?:[.,]\d+)?)/);
+            if (priceMatch) {
+                pricePerNight = parseFloat(priceMatch[1].replace(',', '.'));
+            }
+        }
+    }
+
+    if (!pricePerNight) {
+        display.textContent = 'Le prix sera calculé automatiquement';
+        return;
+    }
+
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
     const nights = (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
@@ -175,7 +254,10 @@ function calculateTotalPrice() {
     }
 }
 
-document.getElementById('id_room').addEventListener('change', calculateTotalPrice);
+const roomSelect = document.getElementById('id_room');
+if (roomSelect) {
+    roomSelect.addEventListener('change', calculateTotalPrice);
+}
 document.getElementById('id_check_in').addEventListener('change', calculateTotalPrice);
 document.getElementById('id_check_out').addEventListener('change', calculateTotalPrice);
 

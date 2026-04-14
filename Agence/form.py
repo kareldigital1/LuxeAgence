@@ -2,8 +2,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Hotel, Booking, Room
+from datetime import date
 # Create your models here.
 
+# Formulaire pour la création d'un nouvel utilisateur
 class CustomUserCreationForm(UserCreationForm):
     password1 = forms.CharField(
         label='Password',
@@ -19,7 +21,7 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ('username', 'email')
 
-
+# Formulaire pour la création et la mise à jour des hôtels
 class HotelForm(forms.ModelForm):
     class Meta:
         model = Hotel
@@ -35,6 +37,7 @@ class HotelForm(forms.ModelForm):
             
         }
 
+# Formulaire pour la création et la mise à jour des réservations
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
@@ -54,15 +57,45 @@ class BookingForm(forms.ModelForm):
                     ),
         }
 
+    # Personnalisation du formulaire pour ajouter des contraintes sur les dates et la disponibilité des chambres
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Add data-price to room options
-        choices = []
-        for room in Room.objects.all():
-            choices.append((room.id, f"{room.room_number} - {room.room_type} ({room.price_per_night}/nuit)", {'data-price': room.price_per_night}))
-        self.fields['room'].choices = choices
+        # Add today's date as minimum date for check_in and check_out
+        today = date.today().isoformat()
+        if 'check_in' in self.fields:
+            self.fields['check_in'].widget.attrs['min'] = today
+        if 'check_out' in self.fields:
+            self.fields['check_out'].widget.attrs['min'] = today
 
+        # Limit room choices to available rooms (used in admin creation)
+        try:
+            self.fields['room'].queryset = Room.objects.filter(available=True)
+        except Exception:
+            # in case models aren't ready or in migrations, fallback to all rooms
+            self.fields['room'].queryset = Room.objects.all()
 
+    # Validation pour s'assurer que la chambre sélectionnée est disponible
+    def clean_room(self):
+        room = self.cleaned_data['room']
+        if not room.available:
+            raise forms.ValidationError("Cette chambre n'est pas disponible")
+        return room
+    # Validation pour s'assurer que les dates sont valides
+    def clean(self):
+        cleaned_data = super().clean()
+        check_in = cleaned_data.get('check_in')
+        check_out = cleaned_data.get('check_out')
+
+        if check_in and check_in < date.today():
+            self.add_error('check_in', "La date d'entrée ne peut pas être dans le passé")
+
+        if check_out and check_out < date.today():
+            self.add_error('check_out', "La date de sortie ne peut pas être dans le passé")
+
+        if check_in and check_out and check_out <= check_in:
+            self.add_error('check_out', "La date de sortie doit être après la date d'entrée")
+
+# Formulaire pour la création et la mise à jour des chambres
 class RoomForm(forms.ModelForm):
     class Meta:
         model = Room

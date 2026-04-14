@@ -7,6 +7,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, UpdateView, ListView, CreateView, DeleteView, DetailView
 from django.db.models import Q
+from django.urls import reverse
+
+
 
 
 # Create your views here.
@@ -51,13 +54,24 @@ class ListRoomView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+
+        # 🔥 récupérer l'id de l'hôtel depuis l'URL
+        hotel_id = self.kwargs.get('hotel_id')
+
+        if hotel_id:
+            queryset = queryset.filter(hotel_id=hotel_id)
+
+        # 🔍 recherche
         q = self.request.GET.get('q', '').strip()
         if q:
             queryset = queryset.filter(
-                Q(room_number__icontains=q) | Q(room_type__icontains=q) | Q(capacity__icontains=q)
+                Q(room_number__icontains=q) |
+                Q(room_type__icontains=q) |
+                Q(capacity__icontains=q)
             )
-        return queryset
 
+        return queryset
+    
 #Pour afficher la liste des reservations des utilisateur
 class ListBookingView(LoginRequiredMixin,ListView):
     template_name = 'bookings/list_booking.html'
@@ -111,7 +125,7 @@ class CreateRoomView(LoginRequiredMixin,CreateView):
     success_url = '/gestionrooms/'
 
 #Pour afficher les details d'une chambre
-class DetailRoomView(LoginRequiredMixin,DetailView):
+class DetailRoomView(DetailView):
     model = Room
     template_name = 'rooms/detail_room.html'
     context_object_name = 'room'
@@ -135,7 +149,7 @@ class GestionBookingView(LoginRequiredMixin,ListView):
     context_object_name = 'bookings'
 
 #Pour afficher les details d'une reservation
-class DetailBookingView(LoginRequiredMixin,DetailView):
+class DetailBookingView(DetailView):
     model = Booking
     template_name = 'bookings/detail_booking.html'
     context_object_name = 'booking'
@@ -144,19 +158,39 @@ class DetailBookingView(LoginRequiredMixin,DetailView):
 class CreateBookingView(CreateView):
     model = Booking
     form_class = BookingForm
-    template_name = 'bookings/form_booking.html' 
-    success_url = '/gestionbookings/'
+    template_name = 'bookings/form_booking.html'
+    
+    def get_success_url(self):
+        return reverse('detail_booking', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['rooms'] = Room.objects.all()
+        room_id = self.request.GET.get('room_id')  # 🔥 récupérer l'id de la chambre si présent
+        
+        if room_id:
+            # Si une chambre spécifique est demandée, afficher uniquement cette chambre
+            context['rooms'] = Room.objects.filter(id=room_id)
+            context['single_room'] = True
+        else:
+            # Sinon, afficher toutes les chambres disponibles (pour accès via admin)
+            context['rooms'] = Room.objects.filter(available=True)  # 🔥 seulement chambres dispo
+            context['single_room'] = False
         return context
 
     def form_valid(self, form):
         booking = form.save(commit=False)
+
+        #  Calcul du prix total
         nights = (booking.check_out - booking.check_in).days
         booking.total_price = nights * booking.room.price_per_night
+
         booking.save()
+
+        #  RENDRE LA CHAMBRE INDISPONIBLE
+        room = booking.room
+        room.available = False
+        room.save()
+
         return super().form_valid(form)
 
 #Pour modifier une reservation
@@ -164,7 +198,9 @@ class UpdateBookingView(UpdateView):
     model = Booking
     form_class = BookingForm
     template_name = 'bookings/form_booking.html' 
-    success_url = '/gestionbookings/'
+    
+    def get_success_url(self):
+        return reverse('detail_booking', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -196,7 +232,6 @@ class DashboardView(LoginRequiredMixin,TemplateView):
         context['nb_chambres'] = Room.objects.count()
 
         return context
-
 
 
 #Pour s'inscrire

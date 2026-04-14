@@ -39,6 +39,13 @@ class Booking(models.Model):
 
     def __str__(self):
         return self.full_name
+    
+    def delete(self, *args, **kwargs):
+        # rendre la chambre disponible
+        self.room.available = True
+        self.room.save()
+
+        super().delete(*args, **kwargs)
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
