@@ -1,8 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from .models import Hotel, Booking, Room
+from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from .models import Hotel, Booking, Room, Profile
 from datetime import date
+
+
+
 # Create your models here.
 
 # Formulaire pour la création d'un nouvel utilisateur
@@ -109,3 +113,131 @@ class RoomForm(forms.ModelForm):
             'capacity': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Capacité', 'required': True}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
+
+# Dictionnaire de traduction pour les permissions
+PERMISSION_TRANSLATIONS = {
+    #BOOKING
+    'add_booking': 'Créer une réservation',
+    'change_booking': 'Modifier une réservation',
+    'delete_booking': 'Supprimer une réservation',
+    'view_booking': 'Voir une réservation',
+    'assign_booking': 'Assigner une réservation',
+    'change_booking_status': 'Changer le statut d’une réservation',
+
+    # HOTEL
+    'add_hotel': 'Créer un hôtel',
+    'change_hotel': 'Modifier un hôtel',
+    'delete_hotel': 'Supprimer un hôtel',
+    'view_hotel': 'Voir un hôtel',
+
+    # ROOM
+    'add_room': 'Créer une chambre',
+    'change_room': 'Modifier une chambre',
+    'delete_room': 'Supprimer une chambre',
+    'view_room': 'Voir une chambre',
+
+    #REVIEW
+    'add_review': 'Créer un avis',
+    'change_review': 'Modifier un avis',
+    'delete_review': 'Supprimer un avis',
+    'view_review': 'Voir un avis',
+
+
+    # USER (auth)
+    'add_user': 'Créer un utilisateur',
+    'change_user': 'Modifier un utilisateur',
+    'delete_user': 'Supprimer un utilisateur',
+    'view_user': 'Voir un utilisateur',
+
+    # GROUP (roles)
+    'add_group': 'Créer un rôle',
+    'change_group': 'Modifier un rôle',
+    'delete_group': 'Supprimer un rôle',
+    'view_group': 'Voir un rôle',
+
+    # PERMISSION
+    'add_permission': 'Créer une permission',
+    'change_permission': 'Modifier une permission',
+    'delete_permission': 'Supprimer une permission',
+    'view_permission': 'Voir une permission',
+
+    # PROFILE
+    'add_profile': 'Créer un profil',
+    'change_profile': 'Modifier un profil',
+    'delete_profile': 'Supprimer un profil',
+    'view_profile': 'Voir un profil',
+
+    # LOG ENTRY (admin)
+    'add_logentry': 'Ajouter une entrée de journal',
+    'change_logentry': 'Modifier une entrée de journal',
+    'delete_logentry': 'Supprimer une entrée de journal',
+    'view_logentry': 'Voir une entrée de journal',
+
+    # CONTENT TYPE
+    'add_contenttype': 'Créer un type de contenu',
+    'change_contenttype': 'Modifier un type de contenu',
+    'delete_contenttype': 'Supprimer un type de contenu',
+    'view_contenttype': 'Voir un type de contenu',
+
+    # SESSION
+    'add_session': 'Créer une session',
+    'change_session': 'Modifier une session',
+    'delete_session': 'Supprimer une session',
+    'view_session': 'Voir une session',
+}
+
+# Formulaire pour la création et la mise à jour des rôles (Group) avec traduction des permissions
+class RoleForm(forms.ModelForm):
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    class Meta:
+        model = Group
+        fields = ['name', 'permissions']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        translated_choices = []
+        for permission in self.fields['permissions'].queryset:
+            label = PERMISSION_TRANSLATIONS.get(permission.codename, permission.name)
+            translated_choices.append((permission.id, label))
+
+        self.fields['permissions'].choices = translated_choices
+
+# Formulaire pour la mise à jour du rôle d'un utilisateur (Profile)
+class ProfileRoleForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['role']        
+
+
+# Formulaires pour la réinitialisation du mot de passe avec personnalisation des champs
+class CustomPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        label='Adresse e-mail',
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Entrez votre adresse e-mail'
+        })
+    )
+
+# Formulaire pour la réinitialisation du mot de passe avec personnalisation des champs
+class CustomSetPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label='Nouveau mot de passe',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nouveau mot de passe'
+        })
+    )
+    new_password2 = forms.CharField(
+        label='Confirmer le mot de passe',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirmez le mot de passe'
+        })
+    )        

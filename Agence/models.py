@@ -1,7 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 # Create your models here.
+# Les modèles pour les hôtels, les chambres, les réservations, les avis et les profils d'utilisateurs
+#modèle pour les hôtels
 class Hotel(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -12,7 +14,8 @@ class Hotel(models.Model):
     image = models.ImageField(upload_to='hotels/')
     def __str__(self):
         return self.name
-    
+
+#modèle pour les chambres    
 class Room(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
     room_number = models.CharField(max_length=20)
@@ -22,6 +25,7 @@ class Room(models.Model):
     capacity = models.IntegerField()
     image = models.ImageField(upload_to='rooms/', default='rooms/default.jpg')
 
+#modèle pour les réservations
 class Booking(models.Model):
     # Infos client (sans compte)
     full_name = models.CharField(max_length=255)
@@ -47,9 +51,37 @@ class Booking(models.Model):
 
         super().delete(*args, **kwargs)
 
+#modèle pour les avis
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
     rating = models.IntegerField()
     comment = models.TextField()        
+
+#modèle pour les profils d'utilisateurs et les rôles
+class Profile(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    role = models.ForeignKey(
+        Group,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='profiles'
+    )
+
+    def __str__(self):
+        return f"Profil de {self.user.username}"
+
+    def has_permission(self, permission_codename, app_label='gestion_app'):
+        if self.role is None:
+            return False
+        return self.role.permissions.filter(
+            codename=permission_codename,
+            content_type__app_label=app_label
+        ).exists()
+    
 

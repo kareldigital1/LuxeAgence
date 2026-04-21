@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex" style="min-height: 100vh;">
+     <!-- Sidebar -->
+    {% include 'administrateur/sidebar.html' %}
+   
+    <div class="container-fluid py-4 px-4" style="flex: 1; background-color: #f8f9fa;">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="fw-bold">Gestion des rôles</h2>
+        </div>
+
+        <div class="row g-4">
+            <!-- afficher les rôles sur le dashboard -->
+            <div class="col-lg-12">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Liste des rôles</h5>
+                        <i class="fa fa-wave-pulse text-muted"></i>
+                    </div>
+                    <div class="card-body">
+                        {% if user.is_authenticated and user.profile.role %}
+                            {% for permission in user.profile.role.permissions.all %}
+                            
+                                {% if permission.codename == 'add_group' %}
+                                    <a href="{% url 'create_role' %}" class="btn btn-success mb-3">
+                                    <small><i class="bi bi-plus"></i></small> Ajouter un rôle
+                                    </a>
+                                {% endif %}
+
+                            {% endfor %}
+                        {% endif %}
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Nombre d'utilisateurs</th>
+                                    <th>
+                                    {% if can_manage_roles %}
+                                        Actions
+                                    {% endif %}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for role in roles %}
+                                <tr>
+                                    <td>{{ role.name }}</td>
+                                    <td>{{ role.user_count }}</td>
+                                    <td>
+                                     {% if user.is_authenticated and user.profile.role %}
+                                        {% for permission in user.profile.role.permissions.all %}
+                                        
+                                            {% if permission.codename == 'view_group' %}
+                                            
+                                                <a href="{% url 'detail_role' role.id %}" class="btn btn-info btn-sm">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            
+                                            {% endif %}
+
+                                            {% if permission.codename == 'change_group' %}
+                                            
+                                                <a href="{% url 'edit_role' role.id %}" class="btn btn-warning btn-sm me-1">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                            
+                                            {% endif %}
+
+                                            {% if permission.codename == 'delete_group' %}
+                                            
+                                                <form action="{% url 'delete_role' role.id %}" method="post" style="display:inline;">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Voulez-vous vraiment supprimer ce rôle ?');">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    </td>
+                                    </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Aucun rôle disponible</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+

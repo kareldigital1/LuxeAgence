@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex" style="min-height: 100vh;">
+    {% include 'administrateur/sidebar.html' %}
+    <!-- Contenu principal -->
+    <div class="flex-grow-1 p-4">
+
+        <div class="card shadow">
+            <div class="card-header text-white" style="border-bottom: 3px solid gray;">
+                <h4 class="mb-0">
+                    {% if form.instance.pk %} Modifier un rôle {% else %} Créer un rôle {% endif %}
+                </h4>
+            </div>
+
+            <div class="card-body mt-3">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="row">
+
+                        <div class="col-md-4 border-end">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nom du rôle</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    name="{{ form.name.html_name }}"
+                                    placeholder="Enter your group name"
+                                    autofocus
+                                />
+                            {% if form.name.errors %}
+                                <div class="text-danger">{{ form.name.errors }}</div>
+                            {% endif %}
+                            </div>
+
+                            <div class="alert alert-info mt-4">
+                                💡 Donne un nom clair au rôle (ex : Admin, Manager, Employé)
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <label class="form-label fw-bold">Permissions</label>
+
+                            <div style="max-height: 400px; overflow-y: auto; border:1px solid #ddd; padding:15px; border-radius:10px;">
+
+                                <div class="row">
+                                    {% for checkbox in form.permissions %}
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-2">
+                                            {{ checkbox.tag }}
+                                            <label class="form-check-label">
+                                                {{ checkbox.choice_label }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Boutons -->
+                    <div class="mt-4 d-flex justify-content-between">
+                        <a href="{% url 'gestroles' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-save"></i> Enregistrer
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

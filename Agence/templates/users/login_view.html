@@ -4,21 +4,26 @@
 <div class="container">
     <div class="row mt-5 mb-5 shadow">
         <div class="col-lg-6 shadow p-4">
-            <h3>Connexion</h3>
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-danger">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
+            <div style="border-bottom: 2px solid rgb(152, 187, 244);">
+                <h3>Connexion</h3>
+                <p class="text-muted">Connectez-vous à votre compte pour continuer.</p>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
             <form method="post" action="{% url 'login_view' %}">
                 {% csrf_token %}
-                <div class="form-group">
+                <div class="form-group mt-2">
                     <label for="exampleInputEmail1">Nom d'utilisateur</label>
                     <input type="text" class="form-control" id="exampleInputEmail1" name="username" aria-describedby="emailHelp">
-                    <small id="emailHelp" class="form-text text-muted">Nous ne partagerons jamais votre adresse e-mail avec qui que ce soit d'autre.</small>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword1">Mot de passe</label>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label for="exampleInputPassword1" class="mb-0">Mot de passe</label>
+                        <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
+                    </div>
                     <input type="password" class="form-control" id="exampleInputPassword1" name="password">
                 </div>
                 <div class="form-group form-check">

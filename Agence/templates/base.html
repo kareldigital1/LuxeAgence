@@ -75,7 +75,6 @@
                 {% if user.is_authenticated %}
                     <a class="dropdown-item" href="{% url 'logout' %}">Se déconnecter</a>
                 {% else %}
-                <a class="dropdown-item" href="{% url 'register' %}">S'inscrire</a>
                 <a class="dropdown-item" href="{% url 'login_view' %}">Se connecter</a>
                 {% endif %}
                 </div>

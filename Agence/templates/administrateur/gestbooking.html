@@ -20,9 +20,15 @@
                         <i class="fa fa-wave-pulse text-muted"></i>
                     </div>
                     <div class="card-body">
-                        <a href="{% url 'create_booking' %}" class="btn btn-primary mb-3">
-                            <small><i class="bi bi-plus"></i></small> Ajouter une réservation
-                        </a>
+                        {% if user.is_authenticated and user.profile.role %}
+                            {% for permission in user.profile.role.permissions.all %}
+                                {% if permission.codename == 'add_booking' %}
+                                    <a href="{% url 'create_booking' %}" class="btn btn-primary mb-3">
+                                        <small><i class="bi bi-plus"></i></small> Ajouter une réservation
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                         <div style="overflow-x: auto;">
                             <table class="table table-bordered">
                                 <thead>
@@ -34,7 +40,15 @@
                                         <th>Séjour</th>
                                         <th>Prix total</th>
                                         <th>Date de création de la réservation</th>
-                                        <th>Actions</th>
+                                        {% if user.is_authenticated and user.profile.role %}
+                                        {% for permission in user.profile.role.permissions.all %}
+
+                                            {% if permission.codename == 'change_booking' %}
+                                            <th>Actions</th>
+                                            {% endif %}
+
+                                        {% endfor %}
+                                        {% endif %}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -47,15 +61,22 @@
                                         <td>{{ booking.check_in }} à {{ booking.check_out }}</td>
                                         <td>{{ booking.total_price }} Fcfa</td>
                                         <td>{{ booking.created_at }}</td>
-                                        <td>
-                                            <form action="{% url 'delete_booking' booking.id %}" method="post" style="display:inline;">
+                                         {% if user.is_authenticated and user.profile.role %}
+                                            {% for permission in user.profile.role.permissions.all %}
+                                        
+                                            {% if permission.codename == 'delete_booking' %}
+                                            <td>
+                                                <form action="{% url 'delete_booking' booking.id %}" method="post" style="display:inline;">
                                                     {% csrf_token %}
                                                     <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Voulez-vous vraiment supprimer cette réservation ?');">
+                                                            onclick="return confirm('Voulez-vous vraiment supprimer ce rôle ?');">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
-                                            </form>
-                                        </td>
+                                                </form>
+                                            </td>    
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
                                     </tr>
                                     {% empty %}
                                     <tr>

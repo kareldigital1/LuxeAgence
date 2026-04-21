@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    
+    input, textarea, select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #0d6efd;
+        outline: none;
+        box-shadow: 0 0 6px rgba(13, 110, 253, 0.4);
+    }
+
+    input:hover, textarea:hover, select:hover {
+        border-color: #86b7fe;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    .form-label {
+        margin-bottom: 6px;
+    }
+
+    .btn-success:hover {
+        background-color: #198754;
+        transform: scale(1.03);
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .card {
+        transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+    }
+</style>
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <!-- Header -->
+                <div class="card-header bg-success text-white text-center rounded-top-4">
+                    <h4 class="mb-0 text-white">
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Modifier le rôle d'un utilisateur 
+                    </h4>
+                </div>
+
+                <!-- Body -->
+                <div class="card-body p-4">
+                    <h3 class="mb-3">{{ user.username }}</h3>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- statut -->
+                        <div class="mb-4">
+                            <label for="id_status" class="form-label fw-semibold">
+                                <i class="bi bi-flag me-1"></i> Role
+                            </label>
+                            {{ form.role }}
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'gestusers' %}" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left"></i> Annuler
+                            </a>
+
+                            <button type="submit" class="btn btn-success d-grid px-4" >
+                                <i class="bi bi-check-circle"></i> Enregistrer
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

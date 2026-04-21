@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex" style="min-height: 100vh;">
+     <!-- Sidebar -->
+    {% include 'administrateur/sidebar.html' %}
+   
+    <div class="container-fluid py-4 px-4" style="flex: 1; background-color: #f8f9fa;">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="fw-bold">Gestion des utilisateurs</h2>
+        </div>
+
+        <div class="row g-4">
+            <!-- afficher les utilisateurs sur le dashboard -->
+            <div class="col-lg-12">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Liste des utilisateurs</h5>
+                        <i class="fa fa-wave-pulse text-muted"></i>
+                    </div>
+                    <div class="card-body">
+                      <a href="{% url 'register' %}" class="btn btn-primary mb-3">
+                      <small><i class="bi bi-plus"></i></small> Ajouter un utilisateur
+                      </a>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nom d'utilisateur</th>
+                                    <th>Email</th>
+                                    <th>Rôles</th>
+                                    <th>Status</th>
+                                    
+                                    {% if user.is_authenticated and user.profile.role %}
+                                        {% for permission in user.profile.role.permissions.all %}
+
+                                            {% if permission.codename == 'change_user'%}
+                                            <th>Actions</th>
+                                            {% endif %}
+
+                                        {% endfor %}
+                                    {% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        {% if user.profile.role %}
+                                        <span class="badge bg-secondary text-dark">
+                                            {{ user.profile.role.name }}
+                                        </span>
+                                        {% else %}
+                                        <span class="text-muted">Aucun rôle</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if user.is_active %}
+                                        <span class="badge bg-label-success bg-success text-white me-1">Active</span>
+                                        {% else %}
+                                        <span class="badge bg-label-secondary bg-danger text-white me-1">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    {% if request.user.is_authenticated %}
+                                        {% for permission in request.user.profile.role.permissions.all %}
+
+                                        {% if permission.codename == 'change_group' %}
+                                        <td>
+                                        <a class="btn btn-warning btn-sm" href="{% url 'edit_user' user.id %}"
+                                        ><i class="bi bi-pencil"></i></a>
+                                        <a class="btn btn-info btn-sm" href="{% url 'toggle_user_status' user.pk %}">
+                                        {% if user.is_active %}
+                                        <i class="bi bi-check-circle"></i>
+                                        {% else %}
+                                        <i class="bi bi-x-circle"></i>
+                                        {% endif %}
+                                        </a>
+                                        </td>
+                                        {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Aucun rôle disponible</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+                            

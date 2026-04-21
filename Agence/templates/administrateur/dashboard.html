@@ -1,63 +1,331 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+    .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    }
+    .stat-card.hotels {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .stat-card.rooms {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    .stat-card.bookings {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    .stat-card.users {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+    .stat-card h3 {
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 15px;
+        opacity: 0.9;
+    }
+    .stat-card .stat-number {
+        font-size: 48px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .stat-card .stat-subtitle {
+        font-size: 14px;
+        opacity: 0.85;
+    }
+    .chart-container {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        height: 400px;
+        position: relative;
+        margin-bottom: 25px;
+    }
+    .chart-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+    .occupation-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        text-align: center;
+    }
+    .occupation-circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px auto;
+        font-size: 36px;
+        font-weight: bold;
+        color: #43e97b;
+    }
+    .occupation-subtitle {
+        color: #666;
+        font-size: 14px;
+        margin: 10px 0;
+    }
+    .dashboard-header {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 3px solid #f0f0f0;
+    }
+    .dashboard-header h2 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+    }
+    .dashboard-header p {
+        color: #999;
+        margin: 5px 0 0 0;
+    }
+    h6 {
+        font-weight: bold;
+        color: #333;
+    }
+</style>
+
 <div class="d-flex" style="min-height: 100vh;">
     <!-- Sidebar -->
     {% include 'administrateur/sidebar.html' %}
  
-    <div class="container-fluid py-4 px-4" style="flex: 1; background-color: #f8f9fa;">
+    <div class="container-fluid px-4" style="margin-left: 0;">
         <!-- Header -->
-        <div class="mb-4">
-            <h2 class="fw-bold">Bienvenue, {{ user.username}}</h2>
+        <div class="dashboard-header py-4">
+            <p>Bienvenue, <strong>{{ user.username }}</strong> - Vue d'ensemble de vos activités</p>
         </div>
 
-        <div class="row g-4">
-            <div class="col-lg-auto" style="width: 250px; ">
-                <div class="card shadow-sm border-0 mb-4" style="height: 210px;">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Hôtels</h5>
-                    </div>
-                    <div class="card-body">
-                    <h1 class="display-5">{{ nb_hotels }}</h1>
-                        <p class="text-muted">Nombre total d'hôtels </p>
-                    </div>
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card hotels">
+                    <h3><i class="bi bi-building"></i> HÔTELS</h3>
+                    <div class="stat-number">{{ nb_hotels }}</div>
+                    <div class="stat-subtitle">Nombre total d'hôtels</div>
                 </div>
             </div>
-            <div class="col-lg-auto" style="width: 250px; ">
-                <div class="card shadow-sm border-0 mb-4" style="height: 210px;">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Chambres</h5>
-                    </div>
-                    <div class="card-body">
-                        <h1 class="display-5">{{ nb_chambres }}</h1>
-                        <p class="text-muted">Nombre de chambres disponibles</p>
-                    </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card rooms">
+                    <h3><i class="bi bi-house"></i> CHAMBRES</h3>
+                    <div class="stat-number">{{ nb_chambres }}</div>
+                    <div class="stat-subtitle">Nombre total de chambres</div>
                 </div>
             </div>
-             <div class="col-lg-auto" style="width: 250px; ">
-                <div class="card shadow-sm border-0 mb-4" style="height: 210px;">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Réservations</h5>
-                    </div>
-                    <div class="card-body">
-                        <h1 class="display-5">{{ nb_reservations }}</h1>
-                        <p class="text-muted">Nombre de réservations effectuées</p>
-                    </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card bookings">
+                    <h3><i class="bi bi-calendar-check"></i> RÉSERVATIONS</h3>
+                    <div class="stat-number">{{ nb_reservations }}</div>
+                    <div class="stat-subtitle">Nombre total de réservations</div>
                 </div>
             </div>
-            <div class="col-lg-auto" style="width: 250px; ">
-                <div class="card shadow-sm border-0 mb-4" style="height: 210px;">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Clients</h5>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card users">
+                    <h3><i class="bi bi-person"></i>UTILISATEURS</h3>
+                    <div class="stat-number">{{ nb_utilisateurs }}</div>
+                    <div class="stat-subtitle">Nombre d'utilisateurs actifs</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 1 -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h6>📈 Réservations par Hôtel (Top 5)</h6>
+                    <canvas id="hotelChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h6>🛏️ Types de Chambres</h6>
+                    <canvas id="roomTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 2 -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="chart-container">
+                    <h6>📊 Tendance des Réservations (6 derniers mois)</h6>
+                    <canvas id="trendsChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="occupation-card">
+                    <h6>🔌 Taux d'Occupation</h6>
+                    <div class="occupation-circle" id="occupationCircle">{{ taux_occupation }}%</div>
+                    <div class="occupation-subtitle">
+                        <strong style="color: #43e97b;">{{ chambres_occupees }}</strong> chambres occupées
                     </div>
-                    <div class="card-body">
-                        <h1 class="display-5">{{ nb_clients }}</h1>
-                        <p class="text-muted">Nombre de clients inscrits</p>
+                    <div class="occupation-subtitle">
+                        <strong style="color: #999;">{{ chambres_libres }}</strong> chambres libres
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Appliquer le gradient de taux d'occupation
+    const taux = {{ taux_occupation }};
+    const occupationCircle = document.getElementById('occupationCircle');
+    occupationCircle.style.background = `conic-gradient(#43e97b ${taux}%, #f0f0f0 0%)`;
+
+    // Fonction utilitaire pour les couleurs
+    const colors = {
+        primary: '#667eea',
+        secondary: '#764ba2',
+        success: '#43e97b',
+        danger: '#f5576c',
+        warning: '#f093fb',
+        info: '#00f2fe'
+    };
+
+    // Chart 1: Réservations par Hôtel
+    const hotelCtx = document.getElementById('hotelChart').getContext('2d');
+    new Chart(hotelCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ hotels_chart_labels|safe }},
+            datasets: [{
+                label: 'Réservations',
+                data: {{ hotels_chart_data|safe }},
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(240, 147, 251, 0.8)',
+                    'rgba(79, 172, 254, 0.8)',
+                    'rgba(67, 233, 123, 0.8)',
+                    'rgba(245, 87, 108, 0.8)'
+                ],
+                borderColor: [
+                    '#667eea',
+                    '#f093fb',
+                    '#4facfe',
+                    '#43e97b',
+                    '#f5576c'
+                ],
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Chart 2: Types de Chambres (Pie Chart)
+    const roomCtx = document.getElementById('roomTypeChart').getContext('2d');
+    new Chart(roomCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ types_chart_labels|safe }},
+            datasets: [{
+                data: {{ types_chart_data|safe }},
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(240, 147, 251, 0.8)',
+                    'rgba(79, 172, 254, 0.8)',
+                    'rgba(67, 233, 123, 0.8)',
+                    'rgba(245, 87, 108, 0.8)',
+                    'rgba(255, 193, 7, 0.8)'
+                ],
+                borderColor: [
+                    '#667eea',
+                    '#f093fb',
+                    '#4facfe',
+                    '#43e97b',
+                    '#f5576c',
+                    '#ffc107'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Chart 3: Tendance des Réservations
+    const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+    new Chart(trendsCtx, {
+        type: 'line',
+        data: {
+            labels: {{ mois_labels|safe }},
+            datasets: [{
+                label: 'Réservations',
+                data: {{ mois_data|safe }},
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#667eea',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 6,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
 
 {% endblock %}

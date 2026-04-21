@@ -20,16 +20,30 @@
                         <i class="fa fa-wave-pulse text-muted"></i>
                     </div>
                     <div class="card-body">
-                        <a href="{% url 'create_room' %}" class="btn btn-primary mb-3">
-                            <small><i class="bi bi-plus"></i></small> Ajouter une chambre
-                        </a>
+                        {% if user.is_authenticated and user.profile.role %}
+                            {% for permission in user.profile.role.permissions.all %}
+                                {% if permission.codename == 'add_room' %}
+                                    <a href="{% url 'create_room' %}" class="btn btn-primary mb-3">
+                                        <small><i class="bi bi-plus"></i></small> Ajouter une chambre
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Numéro des chambres</th>
                                     <th>Type de chambre</th>
                                     <th>Disponibilité</th>
-                                    <th>Actions</th>
+                                    {% if user.is_authenticated and user.profile.role %}
+                                        {% for permission in user.profile.role.permissions.all %}
+
+                                            {% if permission.codename == 'change_room' %}
+                                            <th>Actions</th>
+                                            {% endif %}
+
+                                        {% endfor %}
+                                    {% endif %}
                                 </tr>
                             </thead>
                             <tbody>
