@@ -16,6 +16,12 @@ from django.core.exceptions import PermissionDenied
 import json
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
 
 
 # Les classes
@@ -380,13 +386,7 @@ def toggle_user_status(request, pk):
 
     return redirect('gestusers')    
 
-#Pour afficher la page de réinitialisation du mot de passe
-from django.contrib.auth.views import (
-    PasswordResetView,
-    PasswordResetDoneView,
-    PasswordResetConfirmView,
-    PasswordResetCompleteView,
-)
+
 # Pour personnaliser les vues de réinitialisation du mot de passe avec des templates personnalisés et des formulaires personnalisés
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'registration/password_reset_form_CUSTOM.html'
